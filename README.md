@@ -11,7 +11,13 @@ brew tap mlaccetti/tap
 brew install opencode-usage
 ```
 
-Some recent Homebrew versions treat a freshly added third-party tap as untrusted and refuse to load the formula on first install. If that happens, run: `HOMEBREW_NO_REQUIRE_TAP_TRUST=1 brew install opencode-usage`.
+Standard Homebrew installs this without extra steps. Some hardened Homebrew builds enforce tap trust and will refuse to load a freshly added third-party tap. On those, trust this tap once (preferred over the global `HOMEBREW_NO_REQUIRE_TAP_TRUST` override):
+
+```bash
+brew trust --tap mlaccetti/tap
+```
+
+Then re-run `brew install opencode-usage`.
 
 From source:
 
