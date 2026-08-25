@@ -1,0 +1,33 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes
+
+  bump-tap:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      # Requires a HOMEBREW_TAP_TOKEN secret in this repo: a personal access
+      # token with contents:write on mlaccetti/homebrew-tap, so this workflow
+      # can push a formula bump to that repo.
+      - uses: mislav/bump-homebrew-formula-action@v3
+        with:
+          formula-name: opencode-usage
+          homebrew-tap: mlaccetti/homebrew-tap
+          download-url: https://github.com/mlaccetti/opencode-usage/archive/refs/tags/${{ github.ref_name }}.tar.gz
+        env:
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
