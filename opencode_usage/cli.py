@@ -264,6 +264,10 @@ def graph(
 
     if not rows:
         console.print(f"[yellow]No session data for[/yellow] {window_desc}")
+        svg = render_bar_chart_svg(f"Sessions by model ({window_desc})", [])
+        with open(output, "w") as f:
+            f.write(svg)
+        console.print(f"[green]Saved graph to[/green] {output}")
         return
 
     labels = [f"{r['model_id']} ({r['provider']})" for r in rows]
@@ -326,7 +330,15 @@ def _write_html_report(
         "agent_split": {"labels": agent_split_labels, "values": agent_split_values},
     }
 
-    html = _HTML_TEMPLATE.replace("__DATA__", jsonlib.dumps(payload))
+    payload_json = (
+        jsonlib.dumps(payload)
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+        .replace("&", "\\u0026")
+        .replace("\u2028", "\\u2028")
+        .replace("\u2029", "\\u2029")
+    )
+    html = _HTML_TEMPLATE.replace("__DATA__", payload_json)
     with open(path, "w") as f:
         f.write(html)
     console.print(f"[green]Wrote HTML report to[/green] {path}")

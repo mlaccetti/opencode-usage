@@ -46,7 +46,7 @@ def render_bar_chart_svg(
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" '
         f'height="{height}" viewBox="0 0 {width} {height}">',
-        f'<rect width="100%" height="100%" fill="#111111"/>',
+        '<rect width="100%" height="100%" fill="#111111"/>',
         f'<text x="{margin_left}" y="28" fill="#eeeeee" font-family="sans-serif" '
         f'font-size="18" font-weight="bold">{escape(title)}</text>',
     ]

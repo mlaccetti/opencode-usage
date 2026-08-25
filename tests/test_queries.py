@@ -174,6 +174,27 @@ def conn(db_path):
     connection.close()
 
 
+def test_connect_readonly_handles_path_with_space(tmp_path):
+    """The read-only URI must URL-encode the path so spaces/special chars
+    don't break the `file:...?mode=ro` SQLite URI."""
+    dir_with_space = tmp_path / "dir with space"
+    dir_with_space.mkdir()
+    path = dir_with_space / "opencode.db"
+
+    conn = sqlite3.connect(str(path))
+    conn.execute("CREATE TABLE t (x INTEGER)")
+    conn.execute("INSERT INTO t (x) VALUES (1)")
+    conn.commit()
+    conn.close()
+
+    ro_conn = queries.connect_readonly(path)
+    try:
+        row = ro_conn.execute("SELECT x FROM t").fetchone()
+        assert row["x"] == 1
+    finally:
+        ro_conn.close()
+
+
 # --------------------------------------------------------------------------
 # cost_by_model
 # --------------------------------------------------------------------------

@@ -6,7 +6,7 @@ A CLI that reports [opencode](https://opencode.ai) usage: cost, tokens, agents, 
 
 Homebrew:
 
-```
+```bash
 brew tap mlaccetti/tap
 brew install opencode-usage
 ```
@@ -15,7 +15,7 @@ Some recent Homebrew versions treat a freshly added third-party tap as untrusted
 
 From source:
 
-```
+```bash
 uv tool install .
 # or
 pipx install .
@@ -27,7 +27,7 @@ All commands read `~/.local/share/opencode/opencode.db` by default; override wit
 
 Cost and tokens by model:
 
-```
+```bash
 opencode-usage models
 opencode-usage models --since 2026-08-01 --until 2026-08-24
 opencode-usage models --group-by day --html report.html
@@ -36,37 +36,37 @@ opencode-usage models --json
 
 Top-level agent vs sub-agent spend:
 
-```
+```bash
 opencode-usage agents
 ```
 
 Cost by project:
 
-```
+```bash
 opencode-usage projects
 ```
 
 Drill into one session:
 
-```
+```bash
 opencode-usage session <session-id>
 opencode-usage session <session-id> --json
 ```
 
 Token efficiency per model (cache read/write, reasoning share, output:input ratio):
 
-```
+```bash
 opencode-usage efficiency
 ```
 
 Horizontal bar chart of sessions per model, rendered as a standalone SVG (no third-party dependencies):
 
-```
+```bash
 opencode-usage graph
 opencode-usage graph --since 2026-08-01 --output sessions.svg
 ```
 
-`--html` on `models`, `agents`, `projects`, or `efficiency` writes a self-contained HTML report (Chart.js via CDN) alongside the table output.
+`--html` on `models`, `agents`, `projects`, or `efficiency` writes an HTML report alongside the table output. The report loads Chart.js from a CDN (`cdn.jsdelivr.net`), so viewing it requires network access; it is not fully offline/self-contained.
 
 ## How it works
 

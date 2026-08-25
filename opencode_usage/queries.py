@@ -20,6 +20,7 @@ import sqlite3
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
+from urllib.parse import quote
 
 
 DEFAULT_DB_PATH = os.path.expanduser("~/.local/share/opencode/opencode.db")
@@ -31,7 +32,7 @@ def connect_readonly(path: os.PathLike | str = DEFAULT_DB_PATH) -> sqlite3.Conne
     Uses mode=ro (not immutable) so WAL-mode reads stay consistent while
     opencode is running and writing concurrently.
     """
-    uri = f"file:{os.fspath(path)}?mode=ro"
+    uri = f"file:{quote(os.fspath(path))}?mode=ro"
     conn = sqlite3.connect(uri, uri=True)
     conn.row_factory = sqlite3.Row
     return conn
