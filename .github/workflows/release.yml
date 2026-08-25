@@ -1,0 +1,49 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Create GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes
+
+  bump-tap:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      # The mlaccetti/homebrew-tap default branch is protected (PR-only,
+      # enforce_admins), so this action must open a pull request rather than
+      # push directly. HOMEBREW_TAP_TOKEN must be a fine-grained PAT with
+      # Contents: read and write AND Pull requests: read and write on
+      # mlaccetti/homebrew-tap, or a classic token with `repo` + `workflow`
+      # scopes. Note: this action only bumps url/sha256, not the formula's
+      # Python `resource` blocks, so a release that changes typer/rich
+      # versions needs the resources regenerated manually
+      # (`brew update-python-resources`).
+      - uses: mislav/bump-homebrew-formula-action@56a283fa15557e9abaa4bdb63b8212abc68e655c # v3
+        with:
+          formula-name: opencode-usage
+          homebrew-tap: mlaccetti/homebrew-tap
+          download-url: https://github.com/mlaccetti/opencode-usage/archive/refs/tags/${{ github.ref_name }}.tar.gz
+          create-pullrequest: true
+          commit-message: |
+            {{formulaName}} {{version}}
+
+            Automated formula bump for opencode-usage {{version}}.
+        env:
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}

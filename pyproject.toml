@@ -1,0 +1,42 @@
+[project]
+name = "opencode-usage"
+version = "0.1.0"
+description = "Reports opencode usage (cost, tokens, agents, projects) from the local opencode.db SQLite database."
+requires-python = ">=3.11"
+dependencies = [
+    "typer>=0.12",
+    "rich>=13",
+]
+license = { text = "MIT" }
+authors = [{ name = "Michael Laccetti" }]
+readme = "README.md"
+keywords = ["opencode", "cli", "usage", "sqlite", "cost-tracking"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+
+[project.scripts]
+opencode-usage = "opencode_usage.entrypoint:main"
+
+[project.urls]
+Homepage = "https://github.com/mlaccetti/opencode-usage"
+Repository = "https://github.com/mlaccetti/opencode-usage"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["opencode_usage"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "opencode_usage",
+    "tests",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+]
