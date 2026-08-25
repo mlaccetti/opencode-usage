@@ -11,6 +11,8 @@ brew tap mlaccetti/tap
 brew install opencode-usage
 ```
 
+Some recent Homebrew versions treat a freshly added third-party tap as untrusted and refuse to load the formula on first install. If that happens, run: `HOMEBREW_NO_REQUIRE_TAP_TRUST=1 brew install opencode-usage`.
+
 From source:
 
 ```
